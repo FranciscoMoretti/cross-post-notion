@@ -41,6 +41,7 @@
     "hashnode": {
       "options": {
         "should_publish": true,
+        "should_hide": true,
         "should_notify_followers": false,
         "properties": {
           "title": "Title for Hashnode"
