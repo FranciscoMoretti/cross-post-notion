@@ -50,9 +50,10 @@ class HashnodeClient {
     }
 
     const createStoryInput = {
-      title: this.notion.getAttributeValue(properties[this.options.properties?.title || HashnodeProperties.TITLE]),
+      title: 'My Article Title',
       contentMarkdown: markdown,
-      subtitle: this.notion.getAttributeValue(properties[this.options.properties?.subtitle || HashnodeProperties.SUBTITLE]),
+      // Use description as subtitle if they are 150 chars
+      // subtitle: this.notion.getAttributeValue(properties[this.options.properties?.subtitle || HashnodeProperties.SUBTITLE]),
       ...(canonical_url && {
         isRepublished: {
           originalArticleUrl: canonical_url
