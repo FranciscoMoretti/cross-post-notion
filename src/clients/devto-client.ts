@@ -52,7 +52,7 @@ class DevToClient {
       body_markdown: markdown,
       organization_id: this.connection_settings.organization_id,
       published: this.options.should_publish,
-      title: ''
+      title: 'My Article Title',
     }
     Object.entries(DevToProperties).forEach(([, value]) => {
       const propertyName = this.options.properties && this.options.properties[value] ? 
