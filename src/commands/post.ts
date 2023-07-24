@@ -2,10 +2,10 @@ import DevToClient from "../clients/devto-client";
 import GitHubClient from "../clients/github-client";
 import HashnodeClient from "../clients/hashnode-client";
 import MediumClient from "../clients/medium-client";
-import Notion from "../clients/notion-client";
+import { postDataFromNotion } from "../clients/notion-builder";
+import Config, { ConfigNotion } from "../types/config";
 import GlobalOptions, { Platforms } from "../types/global-options";
 import { Post } from "../types/post";
-import { ConfigNotion } from "../types/config";
 
 type PostOptions = GlobalOptions & {
   platforms: Platforms[];
@@ -18,36 +18,7 @@ export default async function post(
 ) {
   const promises = [];
 
-  // FROM NOTION
-  const notion_config: ConfigNotion = config.notion;
-  const notion = new Notion(notion_config);
-
-  //get page id
-  const pageId = notion.getPageIdFromURL(url);
-  //get blocks
-  const blocks = await notion.getBlocks(url);
-
-  //transform blocks to markdown
-  const markdown = await notion.getMarkdown(blocks);
-  const properties = await notion.getArticleProperties(pageId);
-
-  const canonical_url =
-    config.hashnode.options.properties &&
-    notion.getAttributeValue(
-      properties[config.hashnode.options.properties?.original_article_url]
-    );
-  const tags =
-    config.hashnode.options.properties &&
-    notion.getAttributeValue(
-      properties[config.hashnode.options.properties?.tags]
-    );
-
-  const postData: Post = {
-    title: "My Article Title",
-    markdown: markdown,
-    canonical_url: canonical_url,
-    tags: tags,
-  };
+  const postData: Post = await postDataFromNotion(config.notion, url);
 
   // if (platforms.includes(Platforms.GITHUB)) {
   //   const github = new GitHubClient(config.github, config.notion)
