@@ -41,7 +41,7 @@ class HashnodeClient {
     }
 
     const createStoryInput = {
-      title: "My Article Title",
+      title: this.postData.title,
       contentMarkdown: this.postData.markdown,
       // Use description as subtitle if they are 150 chars
       // subtitle: this.notion.getAttributeValue(properties[this.options.properties?.subtitle || HashnodeProperties.SUBTITLE]),
