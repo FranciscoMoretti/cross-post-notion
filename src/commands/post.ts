@@ -1,6 +1,7 @@
 import DevToClient from "../clients/devto-client";
 import GitHubClient from "../clients/github-client";
 import HashnodeClient from "../clients/hashnode-client";
+import { postDataFromMarkdown } from "../clients/markdown-builder";
 import MediumClient from "../clients/medium-client";
 import { postDataFromNotion } from "../clients/notion-builder";
 import Config, { ConfigNotion } from "../types/config";
@@ -18,7 +19,8 @@ export default async function post(
 ) {
   const promises = [];
 
-  const postData: Post = await postDataFromNotion(config.notion, url);
+  // const postData: Post = await postDataFromNotion(config.notion, url);
+  const postData: Post = await postDataFromMarkdown(config.notion, url);
 
   // if (platforms.includes(Platforms.GITHUB)) {
   //   const github = new GitHubClient(config.github, config.notion)
