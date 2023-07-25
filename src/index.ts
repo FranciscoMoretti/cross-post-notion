@@ -7,9 +7,9 @@ import path from "path";
 //any file that imports `config`
 dotenv.config();
 
-// process.env.SUPPRESS_NO_CONFIG_WARNING = "y";
-// process.env["NODE_CONFIG_DIR"] =
-// __dirname + "/config/" + path.delimiter + "./config/";
+process.env.SUPPRESS_NO_CONFIG_WARNING = "y";
+process.env["NODE_CONFIG_DIR"] =
+  __dirname + "/config/" + path.delimiter + "./config/";
 import config from "config";
 import post from "./commands/post";
 import { program } from "commander";

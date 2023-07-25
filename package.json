@@ -29,12 +29,7 @@
     "nanoid": "3.3.4",
     "notion-to-md": "^2.5.5",
     "octokit": "^2.0.11",
-    "remark-frontmatter": "^4.0.1",
-    "remark-parse": "^10.0.2",
-    "remark-stringify": "^10.0.3",
-    "slugify": "^1.6.5",
-    "to-vfile": "^8.0.0",
-    "unified": "^10.1.2"
+    "slugify": "^1.6.5"
   },
   "devDependencies": {
     "@types/config": "^3.3.0",

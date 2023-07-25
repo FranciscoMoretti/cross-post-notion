@@ -1,9 +1,6 @@
 import { NotionOptions } from "../types/clients/notion";
 import { ConfigNotion } from "../types/config";
-// import { unified } from "unified";
-// import remarkParse from "remark-parse";
-// import remarkFrontmatter from "remark-frontmatter";
-// import remarkStringify from "remark-stringify";
+import matter = require("gray-matter");
 import fs from "fs";
 
 class Markdown {
@@ -17,14 +14,8 @@ class Markdown {
 
   async getMarkdown(source: string): Promise<string> {
     const fileContent = fs.readFileSync(this.filePath, "utf-8");
-    // const file = await unified()
-    // .use(remarkParse)
-    // .use(remarkStringify)
-    // .use(remarkFrontmatter, ["yaml", "toml"])
-    // .use(() => (tree) => {
-    //   console.dir(tree);
-    // })
-    // .process(fileContent);
+    const file = matter(fileContent);
+
     return "";
   }
 

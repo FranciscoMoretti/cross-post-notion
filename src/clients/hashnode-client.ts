@@ -103,7 +103,7 @@ class HashnodeClient {
       }
     `;
 
-    const response = await this.client.request(query);
+    const response: any = await this.client.request(query);
 
     tags.forEach((tag) => {
       //find tag in the response
