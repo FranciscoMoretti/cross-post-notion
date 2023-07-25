@@ -47,7 +47,7 @@ class HashnodeClient {
       // subtitle: this.notion.getAttributeValue(properties[this.options.properties?.subtitle || HashnodeProperties.SUBTITLE]),
       ...(this.postData.canonical_url && {
         isRepublished: {
-          originalArticleUrl: this.postData.canonical_url,
+          originalArticleURL: this.postData.canonical_url,
         },
       }),
       tags: hashNodeTags,
