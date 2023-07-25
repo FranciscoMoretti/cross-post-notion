@@ -6,64 +6,40 @@ import fs from "fs";
 class Markdown {
   options: NotionOptions;
   filePath: string;
+  matter: matter.GrayMatterFile<string>;
 
   constructor(config: ConfigNotion, filePath: string) {
     this.filePath = filePath;
     this.options = config.options;
-  }
 
-  async getMarkdown(source: string): Promise<string> {
     const fileContent = fs.readFileSync(this.filePath, "utf-8");
-    const file = matter(fileContent);
 
-    return "";
+    this.matter = matter(fileContent);
   }
 
-  // async getArticleProperties(page_id: string): Promise<Record<string, any>> {
-  //   const response = await this.notion.pages.retrieve({
-  //     page_id,
-  //   });
+  async getMarkdown(): Promise<string> {
+    return this.matter.content;
+  }
 
-  //   //due to an issue in Notion's types we disable ts for this line
-  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //   // @ts-ignore
-  //   return response.properties;
-  // }
+  async getTitle(): Promise<string> {
+    return this.matter.data.title;
+  }
 
-  // getArticleSlug(title: string): string {
-  //   return `${encodeURI(slugify(title.toLowerCase()))}`;
-  //   return `${slugify(title.toLowerCase())}`;
-  // }
+  async getTags(): Promise<string> {
+    return this.matter.data.tags;
+  }
 
-  // getAttributeValue(attribute: Record<string, any>): string {
-  //   switch (attribute?.type) {
-  //     case "title":
-  //       return attribute.title?.plain_text;
-  //     case "rich_text":
-  //       return attribute.rich_text[0]?.plain_text || "";
-  //     case "date":
-  //       return attribute.date?.start || "";
-  //     default:
-  //       return "";
-  //   }
-  // }
+  async getImage(): Promise<string> {
+    return this.matter.data.image;
+  }
 
-  // // Read more details in Notion's documentation:
-  // // https://developers.notion.com/docs/working-with-page-content#creating-a-page-with-content
-  // getPageIdFromURL(url: string): string {
-  //   const urlArr = url.split("-"),
-  //     unformattedId = urlArr[urlArr.length - 1];
+  async getDate(): Promise<string> {
+    return this.matter.data.date;
+  }
 
-  //   if (unformattedId.length !== 32) {
-  //     throw Error("Invalid ID. Length of ID should be 32 characters");
-  //   }
-
-  //   return (
-  //     `${unformattedId.substring(0, 8)}-${unformattedId.substring(8, 12)}-` +
-  //     `${unformattedId.substring(12, 16)}-${unformattedId.substring(16, 20)}-` +
-  //     `${unformattedId.substring(20)}`
-  //   );
-  // }
+  async getSlug(): Promise<string> {
+    return this.matter.data.slug;
+  }
 }
 
 export default Markdown;

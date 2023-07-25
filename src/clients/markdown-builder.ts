@@ -16,23 +16,16 @@ export async function postDataFromMarkdown(config: ConfigNotion, url: string) {
   }
 
   const client = new Markdown(config, filePath);
-  const fileText = await client.getMarkdown("");
-  const markdown = fileText;
+  const markdown = await client.getMarkdown();
+  const title = await client.getTitle();
+  const tags = await client.getTags();
+  const image = await client.getImage();
+  const slug = await client.getSlug();
 
-  //transform blocks to markdown
-  // const properties = await notion.getArticleProperties(pageId);
-  const canonical_url = "";
-
-  // const canonical_url =
-  //   properties["tags"] && notion.getAttributeValue(properties["tags"]);
-
-  const tags = "";
-  // const tags =
-  //   properties["original_article_url"] &&
-  //   notion.getAttributeValue(properties["original_article_url"]);
+  const canonical_url = `https://www.franciscomoretti.com/blog/${slug}`;
 
   const postData: Post = {
-    title: "My Article Title",
+    title: title,
     markdown: markdown,
     canonical_url: canonical_url,
     tags: tags,
