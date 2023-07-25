@@ -3,7 +3,7 @@ import Notion from "./notion-client";
 import { NotionProperties } from "../types/clients/notion";
 import { Post } from "../types/post";
 import path from "path";
-import fs from "fs";
+import Markdown from "./markdown-client";
 
 export async function postDataFromMarkdown(config: ConfigNotion, url: string) {
   const filePath =
@@ -14,7 +14,9 @@ export async function postDataFromMarkdown(config: ConfigNotion, url: string) {
     console.log('File extension not allowed. Only ".md" files are allowed');
     throw Error("Incorrect file extension provided");
   }
-  const fileText = fs.readFileSync(filePath, "utf-8");
+
+  const client = new Markdown(config, filePath);
+  const fileText = await client.getMarkdown("");
   const markdown = fileText;
 
   //transform blocks to markdown
