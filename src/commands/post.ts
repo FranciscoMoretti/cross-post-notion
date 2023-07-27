@@ -27,10 +27,10 @@ export default async function post(
   //   promises.push(github.post(url, dryRun))
   // }
 
-  // if (platforms.includes(Platforms.DEVTO)) {
-  //   const devto = new DevToClient(config.devto, config.notion)
-  //   promises.push(devto.post(url, dryRun))
-  // }
+  if (platforms.includes(Platforms.DEVTO)) {
+    const devto = new DevToClient(config.devto, postData);
+    promises.push(devto.post(url, dryRun));
+  }
 
   if (platforms.includes(Platforms.HASHNODE)) {
     const hashnode = new HashnodeClient(config.hashnode, postData);

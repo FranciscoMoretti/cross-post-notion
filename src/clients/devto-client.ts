@@ -1,91 +1,73 @@
-import { ConfigDevTo, ConfigNotion } from './../types/config';
-import { DevToConnectionSettings, DevToOptions, DevToProperties } from "../types/clients/devto";
-import Notion from "./notion-client";
-import axios, { AxiosInstance } from 'axios';
+import { ConfigDevTo } from "./../types/config";
+import {
+  DevToConnectionSettings,
+  DevToOptions,
+  DevToProperties,
+} from "../types/clients/devto";
+import axios, { AxiosInstance } from "axios";
+import { Post } from "../types/post";
 
 type ArticleData = {
-  body_markdown: string,
-  organization_id?: string,
-  published: boolean,
-  title: string,
-  series?: string,
-  description?: string,
-  canonical_url?: string,
-  tags?: string[],
-  date?: string
-}
+  body_markdown: string;
+  organization_id?: string;
+  published: boolean;
+  title: string;
+  series?: string;
+  description?: string;
+  canonical_url?: string;
+  tags?: string[];
+  date?: string;
+};
 
 class DevToClient {
-  connection_settings: DevToConnectionSettings
-  options: DevToOptions
-  notion: Notion
-  client: AxiosInstance
+  connection_settings: DevToConnectionSettings;
+  options: DevToOptions;
+  postData: Post;
+  client: AxiosInstance;
 
-  constructor (
-    config: ConfigDevTo,
-    notion_config: ConfigNotion
-  ) {
-    this.connection_settings = config.connection_settings
-    this.options = config.options || {}
-    this.notion = new Notion(notion_config)
+  constructor(config: ConfigDevTo, postData: Post) {
+    this.connection_settings = config.connection_settings;
+    this.options = config.options || {};
+    this.postData = postData;
 
     this.client = axios.create({
-      baseURL: 'https://dev.to/api/',
+      baseURL: "https://dev.to/api/",
       headers: {
-        'api-key': this.connection_settings.api_key
-      }
-    })
+        "api-key": this.connection_settings.api_key,
+      },
+    });
   }
 
-  async post (url: string, dryRun?: boolean) {
-    //get page id
-    const pageId = this.notion.getPageIdFromURL(url)
-    //get blocks
-    const blocks = await this.notion.getBlocks(url)
-
-    //transform blocks to markdown
-    const markdown = await this.notion.getMarkdown(blocks)
-    const properties = await this.notion.getArticleProperties(pageId)
-    
+  async post(url: string, dryRun?: boolean) {
     //format data
     const article: ArticleData = {
-      body_markdown: markdown,
+      body_markdown: this.postData.markdown,
       organization_id: this.connection_settings.organization_id,
       published: this.options.should_publish,
-      title: 'My Article Title',
-    }
-    Object.entries(DevToProperties).forEach(([, value]) => {
-      const propertyName = this.options.properties && this.options.properties[value] ? 
-        this.options.properties[value] :
-        value
-      const attributeValue = this.notion.getAttributeValue(properties[propertyName])
-      if (!attributeValue.length) {
-        return
-      }
-      article[value] = this.formatValue(value, attributeValue)
-    })
+      title: this.postData.title,
+      // ...(this.postData.series && { series: this.postData.series }),
+      // ...(this.postData.description && {
+      //   description: this.postData.description,
+      // }),
+      ...(this.postData.canonical_url && {
+        canonical_url: this.postData.canonical_url,
+      }),
+      ...(this.postData.tags && { tags: this.postData.tags.split(",") }),
+      // ...(this.postData.date && { date: this.postData.date }),
+    };
 
     if (dryRun) {
-      console.log('No error occurred while preparing article for dev.to.')
-      return
+      console.log("No error occurred while preparing article for dev.to.");
+      return;
     }
 
-    //push to dev.to
-    await this.client.post('articles', {
-      article
-    })
+    //post to dev.to
+    await this.client.post("articles", {
+      article,
+    });
 
-    console.log('Article pushed to Dev.to')
-  }
-
-  formatValue (name: string, value: string): any {
-    switch (name) {
-      case 'tags':
-        return value.split(',')
-      default:
-        return value
-    }
+    console.log("Article pushed to Dev.to");
   }
 }
 
-export default DevToClient
+export default DevToClient;

@@ -46,7 +46,7 @@ program
   .option(
     "-d, --dryRun",
     "If this option is passed, the entire process runs without actually posting the article. Useful for testing.",
-    true
+    false
   );
 
 program.parse();
