@@ -37,10 +37,10 @@ export default async function post(
     promises.push(hashnode.post(url, dryRun));
   }
 
-  // if (platforms.includes(Platforms.MEDIUM)) {
-  //   const medium = new MediumClient(config.medium, config.notion)
-  //   promises.push(medium.post(url, dryRun))
-  // }
+  if (platforms.includes(Platforms.MEDIUM)) {
+    const medium = new MediumClient(config.medium, postData);
+    promises.push(medium.post(url, dryRun));
+  }
 
   await Promise.all(promises).then(() =>
     console.log("Finished posting the article")

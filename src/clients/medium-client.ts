@@ -4,19 +4,19 @@ import {
   MediumOptions,
   MediumProperties,
 } from "../types/clients/medium";
-import { ConfigMedium, ConfigNotion } from "../types/config";
-import Notion from "./notion-client";
+import { ConfigMedium } from "../types/config";
+import { Post } from "../types/post";
 
 class MediumClient {
   connection_settings: MediumConnectionSettings;
   options: MediumOptions;
-  notion: Notion;
   client: AxiosInstance;
+  postData: Post;
 
-  constructor(config: ConfigMedium, notion_config: ConfigNotion) {
+  constructor(config: ConfigMedium, postData: Post) {
     this.connection_settings = config.connection_settings;
     this.options = config.options || {};
-    this.notion = new Notion(notion_config);
+    this.postData = postData;
 
     this.client = axios.create({
       baseURL: "https://api.medium.com/v1/",
@@ -27,15 +27,6 @@ class MediumClient {
   }
 
   async post(url: string, dryRun?: boolean) {
-    //get page id
-    const pageId = this.notion.getPageIdFromURL(url);
-    //get blocks
-    const blocks = await this.notion.getBlocks(url);
-
-    //transform blocks to markdown
-    let markdown = await this.notion.getMarkdown(blocks);
-    const properties = await this.notion.getArticleProperties(pageId);
-
     //get user ID
     const {
       data: {
@@ -61,15 +52,11 @@ class MediumClient {
     }
 
     //get post title and add it to the top of the markdown content
-    const title = this.notion.getAttributeValue(
-      properties[this.options.properties?.title || MediumProperties.TITLE]
-    );
-    const subtitle = this.notion.getAttributeValue(
-      properties[this.options.properties?.subtitle || MediumProperties.SUBTITLE]
-    );
-    markdown = `# ${title}\r\n\r\n${
+    const title = this.postData.title;
+    const subtitle = undefined; //TODO: Add subtitle
+    const markdown = `# ${title}\r\n\r\n${
       subtitle ? `${subtitle}\r\n\r\n` : ""
-    }${markdown}`;
+    }${this.postData.markdown}`;
 
     if (dryRun) {
       console.log("No error occurred while preparing article for Medium.");
@@ -80,18 +67,12 @@ class MediumClient {
       title,
       contentFormat: "markdown",
       content: markdown,
-      tags: this.notion
-        .getAttributeValue(
-          properties[this.options.properties?.tags || MediumProperties.TAGS]
-        )
-        .split(",")
-        .map((tag) => tag.trim()),
-      canonicalUrl: this.notion.getAttributeValue(
-        properties[
-          this.options.properties?.canonical_url ||
-            MediumProperties.CANONICAL_URL
-        ]
-      ),
+      tags: this.postData.tags
+        ? this.postData.tags.split(",").map((tag) => tag.trim())
+        : [],
+      canonicalUrl: this.postData.canonical_url
+        ? this.postData.canonical_url
+        : "",
       publishStatus: this.options.should_publish ? "public" : "draft",
       notifyFollowers: this.options.should_notify_followers,
     });
