@@ -18,6 +18,7 @@ export async function postDataFromMarkdown(config: ConfigNotion, url: string) {
   const client = new Markdown(config, filePath);
   const markdown = await client.getMarkdown();
   const title = await client.getTitle();
+  const description = await client.getDescription();
   const tags = await client.getTags();
   const image = await client.getImage();
   const slug = await client.getSlug();
@@ -27,6 +28,7 @@ export async function postDataFromMarkdown(config: ConfigNotion, url: string) {
   const postData: Post = {
     title: title,
     markdown: markdown,
+    description: description,
     canonical_url: canonical_url,
     tags: tags,
   };

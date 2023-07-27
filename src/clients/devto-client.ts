@@ -46,9 +46,9 @@ class DevToClient {
       published: this.options.should_publish,
       title: this.postData.title,
       // ...(this.postData.series && { series: this.postData.series }),
-      // ...(this.postData.description && {
-      //   description: this.postData.description,
-      // }),
+      ...(this.postData.description && {
+        description: this.postData.description,
+      }),
       ...(this.postData.canonical_url && {
         canonical_url: this.postData.canonical_url,
       }),

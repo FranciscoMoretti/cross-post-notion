@@ -17,6 +17,9 @@ export async function postDataFromNotion(config: ConfigNotion, url: string) {
 
   const canonical_url =
     properties["tags"] && notion.getAttributeValue(properties["tags"]);
+  const description =
+    properties["description"] &&
+    notion.getAttributeValue(properties["description"]);
   const tags =
     properties["original_article_url"] &&
     notion.getAttributeValue(properties["original_article_url"]);
@@ -25,6 +28,7 @@ export async function postDataFromNotion(config: ConfigNotion, url: string) {
     title: "My Article Title",
     markdown: markdown,
     canonical_url: canonical_url,
+    description: description,
     tags: tags,
   };
   return postData;

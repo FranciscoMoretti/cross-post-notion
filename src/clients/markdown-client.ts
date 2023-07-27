@@ -25,6 +25,10 @@ class Markdown {
     return this.matter.data.title;
   }
 
+  async getDescription(): Promise<string> {
+    return this.matter.data.description;
+  }
+
   async getTags(): Promise<string> {
     return this.matter.data.tags;
   }

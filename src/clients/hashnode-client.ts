@@ -44,7 +44,9 @@ class HashnodeClient {
       title: this.postData.title,
       contentMarkdown: this.postData.markdown,
       // Use description as subtitle if they are 150 chars
-      // subtitle: this.notion.getAttributeValue(properties[this.options.properties?.subtitle || HashnodeProperties.SUBTITLE]),
+      ...(this.postData.description && {
+        subtitle: this.postData.description,
+      }),
       ...(this.postData.canonical_url && {
         isRepublished: {
           originalArticleURL: this.postData.canonical_url,

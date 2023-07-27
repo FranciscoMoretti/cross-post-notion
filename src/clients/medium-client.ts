@@ -53,7 +53,7 @@ class MediumClient {
 
     //get post title and add it to the top of the markdown content
     const title = this.postData.title;
-    const subtitle = undefined; //TODO: Add subtitle
+    const subtitle = this.postData.description;
     const markdown = `# ${title}\r\n\r\n${
       subtitle ? `${subtitle}\r\n\r\n` : ""
     }${this.postData.markdown}`;
