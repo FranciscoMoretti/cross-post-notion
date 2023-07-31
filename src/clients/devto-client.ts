@@ -34,11 +34,17 @@ class DevToClient {
       baseURL: "https://dev.to/api/",
       headers: {
         "api-key": this.connection_settings.api_key,
+        Accept: "application/vnd.forem.api-v1+json",
       },
     });
   }
 
   async post(url: string, dryRun?: boolean) {
+    const normalizedTags = this.postData.tags
+      ? this.postData.tags
+          .split(",")
+          .map((tag) => tag.toLowerCase().replace(/[^a-z0-9]/gi, ""))
+      : [];
     //format data
     const article: ArticleData = {
       body_markdown: this.postData.markdown,
@@ -55,7 +61,9 @@ class DevToClient {
       ...(this.postData.image && {
         main_image: this.postData.image,
       }),
-      ...(this.postData.tags && { tags: this.postData.tags.split(",") }),
+      ...(this.postData.tags && {
+        tags: normalizedTags,
+      }),
       // ...(this.postData.date && { date: this.postData.date }),
     };
 
