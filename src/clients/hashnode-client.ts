@@ -52,6 +52,9 @@ class HashnodeClient {
           originalArticleURL: this.postData.canonical_url,
         },
       }),
+      ...(this.postData.image && {
+        coverImageURL: this.postData.image,
+      }),
       tags: hashNodeTags,
       isPartOfPublication: {
         publicationId: this.connection_settings.publication_id,

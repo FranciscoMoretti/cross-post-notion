@@ -52,6 +52,9 @@ class DevToClient {
       ...(this.postData.canonical_url && {
         canonical_url: this.postData.canonical_url,
       }),
+      ...(this.postData.image && {
+        main_image: this.postData.image,
+      }),
       ...(this.postData.tags && { tags: this.postData.tags.split(",") }),
       // ...(this.postData.date && { date: this.postData.date }),
     };

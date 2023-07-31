@@ -4,4 +4,5 @@ export type Post = {
   description?: string;
   canonical_url?: string;
   tags?: string;
+  image?: string;
 };

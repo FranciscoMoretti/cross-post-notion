@@ -24,6 +24,9 @@ export async function postDataFromMarkdown(config: ConfigNotion, url: string) {
   const slug = await client.getSlug();
 
   const canonical_url = `https://www.franciscomoretti.com/blog/${slug}`;
+  const image_url = image
+    ? `https://www.franciscomoretti.com${image}`
+    : undefined;
 
   const postData: Post = {
     title: title,
@@ -31,6 +34,7 @@ export async function postDataFromMarkdown(config: ConfigNotion, url: string) {
     description: description,
     canonical_url: canonical_url,
     tags: tags,
+    image: image_url,
   };
   return postData;
 }
