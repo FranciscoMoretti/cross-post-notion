@@ -30,7 +30,7 @@ class Markdown {
   }
 
   async getTags(): Promise<string> {
-    return this.matter.data.tags;
+    return this.matter.data.tag;
   }
 
   async getImage(): Promise<string> {
