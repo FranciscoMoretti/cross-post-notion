@@ -54,9 +54,11 @@ class MediumClient {
     //get post title and add it to the top of the markdown content
     const title = this.postData.title;
     const subtitle = this.postData.description;
+    const image = this.postData.image;
     const markdown = `# ${title}\r\n\r\n${
       subtitle ? `${subtitle}\r\n\r\n` : ""
-    }${this.postData.markdown}`;
+    }${image ? `![Post thumbnail](${image})\r\n\r\n` : ""}
+    ${this.postData.markdown}`;
 
     if (dryRun) {
       console.log("No error occurred while preparing article for Medium.");
