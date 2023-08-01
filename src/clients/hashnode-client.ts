@@ -46,7 +46,7 @@ class HashnodeClient {
     const postsTags = await Promise.all(tagsPromises);
     const tags = postsTags.flatMap((tag) => tag);
     this.saveToFile(tags);
-    console.log("data.json written correctly");
+    console.log("Tags Dictionary written correctly");
   }
 
   private saveToFile(tags: HashnodeTag[]) {
@@ -77,14 +77,29 @@ class HashnodeClient {
     return dictionary;
   }
 
+  private findTagInDictionary(queryTag: string): HashnodeTag | undefined {
+    // Very simple matching algorithm
+    return this.tagsDictionary.find((tag) =>
+      tag.slug.replace(/[^a-z0-9]/gi, "").includes(queryTag)
+    );
+  }
+
   async post(url: string, dryRun?: boolean) {
     //get tags
     const hashNodeTags: HashnodeTag[] = [];
     const inputTags = this.postData.tags;
     if (inputTags) {
-      // hashNodeTags = await this.getTagsFromHashnode(
-      //   inputTags.split(",").map((tag) => tag.trim())
-      // );
+      const normalizedTags = inputTags.split(",").map((tag) =>
+        tag
+          .trim()
+          .toLowerCase()
+          .replace(/[^a-z0-9]/gi, "")
+      );
+
+      const foundTags = normalizedTags.map((tag) =>
+        this.findTagInDictionary(tag)
+      );
+      console.log({ foundTags });
     }
 
     const createStoryInput = {
@@ -188,35 +203,6 @@ class HashnodeClient {
     `;
     const response: any = await this.client.request(query, data);
     return response.post.tags;
-  }
-
-  async getTagsFromHashnode(tags: string[]): Promise<HashnodeTag[]> {
-    const hashnodeTags: HashnodeTag[] = [];
-    //retrieve all tags from hashnode
-    const query = gql`
-      {
-        tagCategories {
-          _id
-          name
-          slug
-        }
-      }
-    `;
-
-    const response: any = await this.client.request(query);
-
-    tags.forEach((tag) => {
-      //find tag in the response
-      const hashnodeTag = response.tagCategories?.find(
-        (t: HashnodeTag) => t.name === tag || t.slug === tag
-      );
-      if (hashnodeTag) {
-        hashnodeTags.push(hashnodeTag);
-      }
-      console.log({ tag, hashnodeTag });
-    });
-
-    return hashnodeTags;
   }
 }
 
