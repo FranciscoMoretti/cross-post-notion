@@ -18,6 +18,7 @@ This tool allows posting from Notion to different platforms.
     - [Post Command](#post-command)
       - [Options](#options)
         - [Platforms](#platforms)
+        - [Dry Run](#dry-run)
   - [Config](#config)
     - [Available Configurations](#available-configurations)
     - [Environment Variables when Loading Configurations from a Custom File](#environment-variables-when-loading-configurations-from-a-custom-file)
@@ -29,6 +30,7 @@ This tool allows posting from Notion to different platforms.
     - [How do I obtain the URL of the Notion document?](#how-do-i-obtain-the-url-of-the-notion-document)
     - [I get the error "No matches found: URL"](#i-get-the-error-no-matches-found-url)
     - [NPX doesn't use latest version by default](#npx-doesnt-use-latest-version-by-default)
+    - [Medium tags dictionary](#medium-tags-dictionary)
 
 ## Supported Platforms
 
@@ -59,7 +61,7 @@ This tool allows posting from Notion to different platforms.
 ### Hashnode
 
 - `HASHNODE_TOKEN`: (required) Hashnode personal token
-- `HASHNODE_PUB_ID`: (required) The ID of the publication to publish the article under. You can retrieve it either from the publication's dashboard page, where the ID is the  second part of the URL (`https://hashnode.com/PUB_ID/dashboard`).
+- `HASHNODE_PUB_ID`: (required) The ID of the publication to publish the article under. You can retrieve it either from the publication's dashboard page, where the ID is the second part of the URL (`https://hashnode.com/PUB_ID/dashboard`).
 
 ### Medium
 
@@ -167,9 +169,7 @@ The JSON configuration file can have the following fields:
   "config": {
     "notion": {
       "options": {
-        "skip_block_types": [
-        
-        ]
+        "skip_block_types": []
       }
     },
     "github": {
@@ -358,3 +358,8 @@ So, it's recommended to use `@latest` with your commands:
 ```bash
 npx cross-post-notion@latest <url>
 ```
+
+### Medium tags dictionary
+
+The Medium tags dictionary can be filled with your tags of interest by copying the tag strings from any of your Medium pulbications or drafts.
+Try to add a tag by writing in `Settings > Reader Interests > Topics` to find the tag string. Then simply write it in the `medium-tags-dictionary.json` file.
