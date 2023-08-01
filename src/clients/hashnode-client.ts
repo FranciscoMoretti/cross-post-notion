@@ -9,8 +9,8 @@ import { Post } from "../types/post";
 import fs from "fs";
 
 type HashnodeTag = {
-  slug: string;
   _id: string;
+  slug: string;
   name: string;
 };
 
@@ -77,16 +77,20 @@ class HashnodeClient {
     return dictionary;
   }
 
-  private findTagInDictionary(queryTag: string): HashnodeTag | undefined {
+  private findTagInDictionary(queryTag: string): HashnodeTag {
     // Very simple matching algorithm
-    return this.tagsDictionary.find((tag) =>
+    const tag = this.tagsDictionary.find((tag) =>
       tag.slug.replace(/[^a-z0-9]/gi, "").includes(queryTag)
     );
+    if (tag) {
+      return tag;
+    }
+    throw Error(`Tag ${queryTag} not found in dictionary`);
   }
 
   async post(url: string, dryRun?: boolean) {
     //get tags
-    const hashNodeTags: HashnodeTag[] = [];
+    let hashNodeTags: HashnodeTag[] = [];
     const inputTags = this.postData.tags;
     if (inputTags) {
       const normalizedTags = inputTags.split(",").map((tag) =>
@@ -99,7 +103,8 @@ class HashnodeClient {
       const foundTags = normalizedTags.map((tag) =>
         this.findTagInDictionary(tag)
       );
-      console.log({ foundTags });
+
+      hashNodeTags = foundTags;
     }
 
     const createStoryInput = {
