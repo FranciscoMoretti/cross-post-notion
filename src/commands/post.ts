@@ -23,8 +23,8 @@ export default async function post(
   const postData: Post = await postDataFromMarkdown(config.notion, url);
 
   // if (platforms.includes(Platforms.GITHUB)) {
-  //   const github = new GitHubClient(config.github, config.notion)
-  //   promises.push(github.post(url, dryRun))
+  //   const github = new GitHubClient(config.github, config.notion);
+  //   promises.push(github.post(url, dryRun));
   // }
 
   if (platforms.includes(Platforms.DEVTO)) {
