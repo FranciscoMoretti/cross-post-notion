@@ -6,6 +6,7 @@ import {
 } from "../types/clients/devto";
 import axios, { AxiosInstance } from "axios";
 import { Post } from "../types/post";
+import { normalizeTag } from "../utils/normalize-tag";
 
 type ArticleData = {
   body_markdown: string;
@@ -41,9 +42,7 @@ class DevToClient {
 
   async post(url: string, dryRun?: boolean) {
     const normalizedTags = this.postData.tags
-      ? this.postData.tags
-          .split(",")
-          .map((tag) => tag.toLowerCase().replace(/[^a-z0-9]/gi, ""))
+      ? this.postData.tags.split(",").map((tag) => normalizeTag(tag))
       : [];
     //format data
     const article: ArticleData = {

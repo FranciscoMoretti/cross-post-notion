@@ -7,6 +7,7 @@ import {
 import { ConfigHashnode } from "../types/config";
 import { Post } from "../types/post";
 import fs from "fs";
+import { normalizeTag } from "../utils/normalize-tag";
 
 type HashnodeTag = {
   _id: string;
@@ -80,8 +81,9 @@ class HashnodeClient {
 
   private findTagInDictionary(queryTag: string): HashnodeTag {
     // Very simple matching algorithm
+    const normalizedQuery = normalizeTag(queryTag);
     const tag = this.tagsDictionary.find((tag) =>
-      tag.slug.replace(/[^a-z0-9]/gi, "").includes(queryTag)
+      normalizeTag(tag.slug).includes(normalizedQuery)
     );
     if (tag) {
       return tag;
@@ -94,16 +96,9 @@ class HashnodeClient {
     let hashNodeTags: HashnodeTag[] = [];
     const inputTags = this.postData.tags;
     if (inputTags) {
-      const normalizedTags = inputTags.split(",").map((tag) =>
-        tag
-          .trim()
-          .toLowerCase()
-          .replace(/[^a-z0-9]/gi, "")
-      );
-
-      const foundTags = normalizedTags.map((tag) =>
-        this.findTagInDictionary(tag)
-      );
+      const foundTags = inputTags
+        .split(",")
+        .map((tag) => this.findTagInDictionary(tag));
 
       hashNodeTags = foundTags;
     }

@@ -363,3 +363,5 @@ npx cross-post-notion@latest <url>
 
 The Medium tags dictionary can be filled with your tags of interest by copying the tag strings from any of your Medium pulbications or drafts.
 Try to add a tag by writing in `Settings > Reader Interests > Topics` to find the tag string. Then simply write it in the `medium-tags-dictionary.json` file.
+
+NOTE: It needs to be slugified by replacing spaces with `-` and by using lowercase.

@@ -6,12 +6,17 @@ import {
 } from "../types/clients/medium";
 import { ConfigMedium } from "../types/config";
 import { Post } from "../types/post";
+import fs from "fs";
+import { normalizeTag } from "../utils/normalize-tag";
+
+const TAGS_DICTIONARY_FILENAME = "medium-tags-dictionary.json";
 
 class MediumClient {
   connection_settings: MediumConnectionSettings;
   options: MediumOptions;
   client: AxiosInstance;
   postData: Post;
+  tagsDictionary: string[];
 
   constructor(config: ConfigMedium, postData: Post) {
     this.connection_settings = config.connection_settings;
@@ -24,6 +29,7 @@ class MediumClient {
         Authorization: `Bearer ${this.connection_settings.token}`,
       },
     });
+    this.tagsDictionary = this.loadFromFile();
   }
 
   async post(url: string, dryRun?: boolean) {
@@ -70,7 +76,9 @@ class MediumClient {
       contentFormat: "markdown",
       content: markdown,
       tags: this.postData.tags
-        ? this.postData.tags.split(",").map((tag) => tag.trim())
+        ? this.postData.tags
+            .split(",")
+            .map((tag) => this.findTagInDictionary(tag))
         : [],
       canonicalUrl: this.postData.canonical_url
         ? this.postData.canonical_url
@@ -80,6 +88,31 @@ class MediumClient {
     });
 
     console.log("Article pushed to Medium");
+  }
+
+  private findTagInDictionary(queryTag: string): string {
+    // Very simple matching algorithm
+    const normalizedQuery = normalizeTag(queryTag);
+    const tag = this.tagsDictionary.find((tag) =>
+      normalizeTag(tag).includes(normalizedQuery)
+    );
+    if (tag) {
+      return tag;
+    }
+    throw Error(`Tag ${queryTag} not found in dictionary`);
+  }
+
+  private loadFromFile() {
+    let dictionary = [];
+    try {
+      const data = fs.readFileSync(TAGS_DICTIONARY_FILENAME, "utf8");
+      dictionary = JSON.parse(data);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+
+    return dictionary;
   }
 }
 
