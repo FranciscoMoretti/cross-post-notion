@@ -35,6 +35,7 @@ class HashnodeClient {
   }
 
   async createDictionary(username: string) {
+    // TODO move username to ENV variable
     const userPosts = await this.getPublicationPosts("franciscomoretti");
 
     const tagsArticlesPosts = userPosts.filter((post) =>
