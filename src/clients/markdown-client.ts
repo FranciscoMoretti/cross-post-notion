@@ -46,14 +46,40 @@ class Markdown {
           replace: "https://www.franciscomoretti.com/$1",
         }
       )
+      .use(
+        // Replace local links with site url
+        (
+            options = {
+              search: /^/,
+              replace: "/uploads",
+            }
+          ) =>
+          (tree) => {
+            visit(tree, (node) => {
+              if (node.type === "link") {
+                node.url = node.url.replace(options.search, options.replace);
+              }
+            });
+          },
+        {
+          search: /^\/([^\s]+)/gm,
+          replace: "https://www.franciscomoretti.com/$1",
+        }
+      )
       .use(() => (tree, file) => {
         // Remove frontmatter node from the tree
         const [frontmatterNode, ...restNodes] = tree.children;
-        tree.children = restNodes;
+        if (frontmatterNode.type == "yaml" || frontmatterNode == "toml") {
+          tree.children = restNodes;
+        }
       })
       .use(remarkStringify)
-      // TODO: Replace file links with URL
-      .process(fs.readFileSync(this.filePath, "utf-8"));
+      .process("[some](/local/link)");
+
+    // .process(fs.readFileSync(this.filePath, "utf-8"));
+
+    console.log(this.file.value);
+    console.log("end");
   }
 
   async getMarkdown(): Promise<string> {
