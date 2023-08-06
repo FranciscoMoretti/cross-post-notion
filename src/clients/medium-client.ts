@@ -63,8 +63,9 @@ class MediumClient {
     const image = this.postData.image;
     const markdown = `# ${title}\r\n\r\n${
       subtitle ? `${subtitle}\r\n\r\n` : ""
-    }${image ? `![Post thumbnail](${image})\r\n\r\n` : ""}
-    ${this.postData.markdown}`;
+    }${image ? `![Post thumbnail](${image})\r\n\r\n` : ""}${
+      this.postData.markdown
+    }`;
 
     if (dryRun) {
       console.log("No error occurred while preparing article for Medium.");
