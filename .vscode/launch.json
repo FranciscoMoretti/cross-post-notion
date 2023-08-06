@@ -8,13 +8,14 @@
       "name": "Launch via NPM",
       "type": "node",
       "request": "launch",
-      "runtimeExecutable": "node",
+      "runtimeExecutable": "npm",
       "skipFiles": ["<node_internals>/**"],
       "args": [
         "run",
         "start",
         "post",
-        "https://www.notion.so/franciscomoretti/How-to-Animate-on-Scroll-with-React-Intersection-Observer-and-Tailwind-in-a-Next-js-App-6ea0408be0824e5c82fa8125c5110982"
+        "https://www.notion.so/franciscomoretti/How-to-Animate-on-Scroll-with-React-Intersection-Observer-and-Tailwind-in-a-Next-js-App-6ea0408be0824e5c82fa8125c5110982",
+        "-d"
       ]
     }
   ]
