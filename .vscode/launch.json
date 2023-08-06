@@ -12,10 +12,9 @@
       "skipFiles": ["<node_internals>/**"],
       "args": [
         "run",
-        "start",
+        "dev",
         "post",
-        "https://www.notion.so/franciscomoretti/How-to-Animate-on-Scroll-with-React-Intersection-Observer-and-Tailwind-in-a-Next-js-App-6ea0408be0824e5c82fa8125c5110982",
-        "-d"
+        "prettier-the-code-formatter-vs-code-extension-for-modern-web-development.md"
       ]
     }
   ]
