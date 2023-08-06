@@ -1,15 +1,15 @@
-#!/usr/bin/env node
-import dotenv from "dotenv";
+#!/usr/bin/env tsx
+import "dotenv/config"; // Needs to be on top to run dotenv.config
 import fs from "fs";
-import path from "path";
+import { env } from "./env";
 
 //config must be loaded before importing
 //any file that imports `config`
-dotenv.config();
+// dotenv.config();
 
-process.env.SUPPRESS_NO_CONFIG_WARNING = "y";
-process.env["NODE_CONFIG_DIR"] =
-  __dirname + "/config/" + path.delimiter + "./config/";
+// process.env.SUPPRESS_NO_CONFIG_WARNING = "y";
+// process.env["NODE_CONFIG_DIR"] =
+//   __dirname + "/config/" + path.delimiter + "./config/";
 import config from "config";
 import post from "./commands/post";
 import { program } from "commander";
