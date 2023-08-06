@@ -33,13 +33,13 @@ Simply search for `bradlc.vscode-tailwindcss` in VS Code Extensions panel and hi
 
 The autocomplete feature in the Tailwind CSS IntelliSense VS Code extension is a game-changer. As a web developer, I use this feature all the time to know what's available and if I'm getting the class name right. With this feature, I can save time and increase productivity.
 
-![Autocomplete utility classes](/assets/20230514090041.png)
+![Autocomplete utility classes](https://www.franciscomoretti.com/assets/20230514090041.png)
 
 ### Hover Preview: 👀
 
 The hover preview feature is one of my favorites. It shows you what CSS the utility class applies simply by hovering over it. This feature is incredibly useful and saves me a lot of time when I'm debugging or trying to figure out how a particular class affects my web page.
 
-![Hover preview class definition](/assets/20230514090205.png)
+![Hover preview class definition](https://www.franciscomoretti.com/assets/20230514090205.png)
 
 ### Linting of CSS and Markup 👨‍💻
 

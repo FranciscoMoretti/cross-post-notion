@@ -5,9 +5,10 @@ import { Post } from "../types/post";
 import path from "path";
 import Markdown from "./markdown-client";
 
-export async function postDataFromMarkdown(config: ConfigNotion, url: string) {
-  const filePath =
-    "tailwind-css-intellisense-vs-code-extension-a-web-developers-best-friend.md";
+export async function postDataFromMarkdown(
+  config: ConfigNotion,
+  filePath: string
+) {
   // const filePath = path.resolve(process.cwd(), url);
   // publish from a local file
   if (path.extname(filePath).toLowerCase().indexOf("md") === -1) {

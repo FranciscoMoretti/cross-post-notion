@@ -11,16 +11,18 @@ import { Post } from "../types/post";
 type PostOptions = GlobalOptions & {
   platforms: Platforms[];
   dryRun: boolean;
+  markdown: boolean;
 };
 
 export default async function post(
   url: string,
-  { config, platforms, dryRun }: PostOptions
+  { config, platforms, dryRun, markdown }: PostOptions
 ) {
   const promises = [];
 
-  // const postData: Post = await postDataFromNotion(config.notion, url);
-  const postData: Post = await postDataFromMarkdown(config.notion, url);
+  const postData: Post = markdown
+    ? await postDataFromMarkdown(config.notion, url)
+    : await postDataFromNotion(config.notion, url);
 
   // if (platforms.includes(Platforms.GITHUB)) {
   //   const github = new GitHubClient(config.github, config.notion);
