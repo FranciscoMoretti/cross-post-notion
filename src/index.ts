@@ -41,7 +41,7 @@ program
   .option(
     "-m, --markdown",
     "If this option is passed, it uses url as a markdown path.",
-    false
+    true
   )
   .option(
     "-p, --platforms [platforms...]",
@@ -51,7 +51,7 @@ program
   .option(
     "-d, --dryRun",
     "If this option is passed, the entire process runs without actually posting the article. Useful for testing.",
-    false
+    true
   );
 
 program.parse();

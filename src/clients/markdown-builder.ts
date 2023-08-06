@@ -17,6 +17,8 @@ export async function postDataFromMarkdown(
   }
 
   const client = new Markdown(config, filePath);
+  await client.setup();
+
   const markdown = await client.getMarkdown();
   const title = await client.getTitle();
   const description = await client.getDescription();
