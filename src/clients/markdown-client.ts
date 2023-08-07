@@ -48,22 +48,25 @@ class Markdown {
       )
       .use(
         // Replace local links with site url
-        (
-            options = {
-              search: /^/,
-              replace: "/uploads",
-            }
-          ) =>
-          (tree) => {
-            visit(tree, (node) => {
-              if (node.type === "link") {
-                node.url = node.url.replace(options.search, options.replace);
+        () => (tree) => {
+          visit(tree, (node) => {
+            if (node.type === "link") {
+              let url: string = node.url;
+              if (!(url.startsWith("www") || url.startsWith("http"))) {
+                if (!url.startsWith("/")) {
+                  url = "/" + url;
+                }
               }
-            });
-          },
-        {
-          search: /^\/([^\s]+)/gm,
-          replace: "https://www.franciscomoretti.com/$1",
+              if (url.startsWith("/")) {
+                // TODO provide internal links base URL as an config option
+                url = "https://www.franciscomoretti.com" + url;
+              }
+              if (url.endsWith(".md")) {
+                url = url.replace(`.md`, "");
+              }
+              node.url = url;
+            }
+          });
         }
       )
       .use(() => (tree, file) => {
@@ -74,12 +77,7 @@ class Markdown {
         }
       })
       .use(remarkStringify)
-      .process("[some](/local/link)");
-
-    // .process(fs.readFileSync(this.filePath, "utf-8"));
-
-    console.log(this.file.value);
-    console.log("end");
+      .process(fs.readFileSync(this.filePath, "utf-8"));
   }
 
   async getMarkdown(): Promise<string> {
