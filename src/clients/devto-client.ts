@@ -7,6 +7,11 @@ import {
 import axios, { AxiosInstance } from "axios";
 import { Post } from "../types/post";
 import { normalizeTag } from "../utils/normalize-tag";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
+import remarkStringify from "remark-stringify";
+import remarkGfm from "remark-gfm";
+import { visit } from "unist-util-visit";
 
 type ArticleData = {
   body_markdown: string;
@@ -40,13 +45,37 @@ class DevToClient {
     });
   }
 
+  private async sanitizeMarkdown(markdown: string): Promise<string> {
+    const sanitized = await unified()
+      .use(remarkParse)
+      .use(remarkGfm)
+      .use(
+        // Remove metadata from code blocks because they are not recognized by devto
+        () => (tree) => {
+          visit(tree, (node) => {
+            if (node.type === "code") {
+              node.meta = "";
+            }
+          });
+        }
+      )
+      .use(remarkStringify)
+      .process(markdown);
+    return String(sanitized);
+  }
+
   async post(url: string, dryRun?: boolean) {
     const normalizedTags = this.postData.tags
       ? this.postData.tags.split(",").map((tag) => normalizeTag(tag))
       : [];
+
+    const sanitizedMarkdown = await this.sanitizeMarkdown(
+      this.postData.markdown
+    );
+
     //format data
     const article: ArticleData = {
-      body_markdown: this.postData.markdown,
+      body_markdown: sanitizedMarkdown,
       organization_id: this.connection_settings.organization_id,
       published: this.options.should_publish,
       title: this.postData.title,
