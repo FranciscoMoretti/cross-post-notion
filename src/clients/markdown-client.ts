@@ -8,6 +8,21 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkParseFrontmatter from "remark-parse-frontmatter";
 import remarkGfm from "remark-gfm";
 import { visit } from "unist-util-visit";
+
+function normalizeObsidianAbsolutePath(path: string): string {
+  if (
+    !path.startsWith("/") &&
+    !(path.startsWith("www") || path.startsWith("http"))
+  ) {
+    return "/" + path;
+  }
+  return path;
+}
+
+function removeExtension(filepath: string): string {
+  return path.parse(filepath).name;
+}
+
 class Markdown {
   options: NotionOptions;
   filePath: string;
@@ -37,6 +52,7 @@ class Markdown {
           (tree) => {
             visit(tree, (node) => {
               if (node.type === "image") {
+                node.url = normalizeObsidianAbsolutePath(node.url);
                 node.url = node.url.replace(options.search, options.replace);
               }
             });
@@ -52,17 +68,11 @@ class Markdown {
           visit(tree, (node) => {
             if (node.type === "link") {
               let url: string = node.url;
-              if (!(url.startsWith("www") || url.startsWith("http"))) {
-                if (!url.startsWith("/")) {
-                  url = "/" + url;
-                }
-              }
+              url = normalizeObsidianAbsolutePath(url);
               if (url.startsWith("/")) {
+                url = removeExtension(url);
                 // TODO provide internal links base URL as an config option
                 url = "https://www.franciscomoretti.com" + url;
-              }
-              if (url.endsWith(".md")) {
-                url = url.replace(`.md`, "");
               }
               node.url = url;
             }
