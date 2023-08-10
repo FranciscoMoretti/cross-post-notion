@@ -8,6 +8,18 @@ import remarkFrontmatter from "remark-frontmatter";
 import remarkParseFrontmatter from "remark-parse-frontmatter";
 import remarkGfm from "remark-gfm";
 import { visit } from "unist-util-visit";
+import { Literal, Nodes, Root, RootContent } from "mdast";
+
+interface TOML extends Literal {
+  type: "toml";
+}
+
+declare module "mdast" {
+  interface RootContentMap {
+    // Allow using toml nodes defined by `remark-frontmatter`.
+    toml: TOML;
+  }
+}
 
 function normalizeObsidianAbsolutePath(path: string): string {
   if (
@@ -52,8 +64,8 @@ class Markdown {
               replace: "/uploads",
             }
           ) =>
-          (tree) => {
-            visit(tree, (node) => {
+          (tree: Root) => {
+            visit(tree, (node: Nodes) => {
               if (node.type === "image") {
                 node.url = normalizeObsidianAbsolutePath(node.url);
                 node.url = node.url.replace(options.search, options.replace);
@@ -67,10 +79,10 @@ class Markdown {
       )
       .use(
         // Replace local links with site url
-        () => (tree) => {
-          visit(tree, (node) => {
+        () => (tree: Root) => {
+          visit(tree, (node: Nodes) => {
             if (node.type === "link") {
-              let url: string = node.url;
+              let url = node.url;
               url = normalizeObsidianAbsolutePath(url);
               if (url.startsWith("/")) {
                 url = removeFileExtension(url);
@@ -82,10 +94,10 @@ class Markdown {
           });
         }
       )
-      .use(() => (tree, file) => {
+      .use(() => (tree: Root) => {
         // Remove frontmatter node from the tree
-        const [frontmatterNode, ...restNodes] = tree.children;
-        if (frontmatterNode.type == "yaml" || frontmatterNode == "toml") {
+        const [frontmatterNode, ...restNodes]: RootContent[] = tree.children;
+        if (frontmatterNode.type == "yaml" || frontmatterNode.type == "toml") {
           tree.children = restNodes;
         }
       })
