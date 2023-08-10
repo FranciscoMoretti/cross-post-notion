@@ -12,15 +12,18 @@ import { visit } from "unist-util-visit";
 function normalizeObsidianAbsolutePath(path: string): string {
   if (
     !path.startsWith("/") &&
-    !(path.startsWith("www") || path.startsWith("http"))
+    !(path.startsWith("www") || path.startsWith("http") || path.startsWith("#"))
   ) {
     return "/" + path;
   }
   return path;
 }
 
-function removeExtension(filepath: string): string {
-  return path.parse(filepath).name;
+function removeFileExtension(filePath: string): string {
+  const lastDotIndex = filePath.lastIndexOf(".");
+  const fileNameWithoutExtension =
+    lastDotIndex !== -1 ? filePath.slice(0, lastDotIndex) : filePath;
+  return fileNameWithoutExtension;
 }
 
 class Markdown {
@@ -70,7 +73,7 @@ class Markdown {
               let url: string = node.url;
               url = normalizeObsidianAbsolutePath(url);
               if (url.startsWith("/")) {
-                url = removeExtension(url);
+                url = removeFileExtension(url);
                 // TODO provide internal links base URL as an config option
                 url = "https://www.franciscomoretti.com" + url;
               }
